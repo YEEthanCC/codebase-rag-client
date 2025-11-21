@@ -61,7 +61,15 @@ export default function Session() {
             setRepoSelect(!repoSelect);
             setSessionId(uuidv4());
         }
-    }    
+    }   
+    
+    const handleCodeChange = async(status: boolean, response: string) => {
+        if(status) {
+            console.log('code change accepted!')
+        } else {
+            console.log('code change rejected')
+        }
+    }
 
     return (
         <div className='w-4/5 h-screen'>
@@ -74,9 +82,19 @@ export default function Session() {
             <div className='flex flex-col h-[80vh] w-full overflow-y-scroll'>
             {messages.map((msg: any, index) => {
                 if('response' in msg) {
-                return <div key={index} className='w-fit h-fit flex-col p-3 m-5 text-left'>
-                  {<Markdown>{msg.response}</Markdown>}
-                </div>
+                    if(mode == 'chat') {
+                        return <div key={index} className='w-fit h-fit flex-col p-3 m-5 text-left'>
+                        {<Markdown>{msg.response}</Markdown>}
+                        </div>
+                    } else {
+                        return <div key={index} className='w-fit h-fit flex-col p-3 m-5 text-left'>
+                        {<Markdown>{msg.response}</Markdown>}
+                            <div>
+                                <button onClick={() => handleCodeChange(true, msg.response)} className='m-2'>✅ <span className='text-xs hover:text-blue-600'>Keep the changes</span></button>
+                                <button onClick={() =>handleCodeChange(false, msg.response)} className='m-2'>❌ <span className='text-xs hover:text-blue-600'>Discard the changes</span></button>
+                            </div>
+                        </div>
+                    }
                 } else {
                 return <div key={index} className='flex self-end p-3 m-5 bg-blue-100 rounded-full w-fit'>
                   {msg.message}
