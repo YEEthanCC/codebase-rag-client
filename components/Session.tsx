@@ -63,12 +63,12 @@ export default function Session() {
         }
     }   
     
-    const handleCodeChange = async(status: boolean, response: string) => {
-        if(status) {
-            console.log('code change accepted!')
-        } else {
-            console.log('code change rejected')
-        }
+    const handleCodeChange = async() => {
+        const params = new URLSearchParams({
+            repo_path: repo,
+            session_id: sessionId,
+        })
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/repo/reject?${params.toString()}`, {method: 'POST'});
     }
 
     return (
@@ -90,8 +90,8 @@ export default function Session() {
                         return <div key={index} className='w-fit h-fit flex-col p-3 m-5 text-left'>
                         {<Markdown>{msg.response}</Markdown>}
                             <div>
-                                <button onClick={() => handleCodeChange(true, msg.response)} className='m-2'>✅ <span className='text-xs hover:text-blue-600'>Keep the changes</span></button>
-                                <button onClick={() =>handleCodeChange(false, msg.response)} className='m-2'>❌ <span className='text-xs hover:text-blue-600'>Discard the changes</span></button>
+                                <button className='m-2'>✅ <span className='text-xs hover:text-blue-600'>Keep the changes</span></button>
+                                <button onClick={() =>handleCodeChange()} className='m-2'>❌ <span className='text-xs hover:text-blue-600'>Discard the changes</span></button>
                             </div>
                         </div>
                     }
